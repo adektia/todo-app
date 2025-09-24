@@ -1,5 +1,5 @@
 import React from 'react';
-import TaskCard from './TaskCard';
+import TaskCardContainer from '../../containers/TaskCardContainer';
 
 export default function TaskGridView({ tasks }) {
   return (
@@ -11,7 +11,7 @@ export default function TaskGridView({ tasks }) {
       }}
     >
       {tasks.map((t) => (
-        <TaskCard key={t.taskId} task={t} />
+        <TaskCardContainer key={t.taskId} task={t} />
       ))}
     </div>
   );

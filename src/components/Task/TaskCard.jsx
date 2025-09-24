@@ -1,88 +1,42 @@
 import React from 'react';
-import styled from 'styled-components';
-import { AppContext } from '../../state/context';
-import { TASK_DELETE, TASK_UPDATE, TASK_STATE_SET } from '../../state/actions';
+import styled, { css } from 'styled-components';
 import Button from '../Button';
 
-const STATES = ['TODO', 'IN PROGRESS', 'DONE'];
-
-function getNextState(curr) {
-  const i = STATES.indexOf(curr);
-  return i === -1 ? 'TODO' : STATES[(i + 1) % STATES.length];
-}
-
-function nextStateLabel(curr) {
-  switch (curr) {
-    case 'TODO':
-      return 'Start';
-    case 'IN PROGRESS':
-      return 'Complete';
-    case 'DONE':
-      return 'Reset';
-    default:
-      return 'Next State';
-  }
-}
-
-export default function TaskCard({ task }) {
-  const { dispatch } = React.useContext(AppContext);
-  const dueDate = task.dueDate ?? '';
-  const description = task.description ?? '';
-
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [desc, setDesc] = React.useState(description);
-  const [due, setDue] = React.useState(dueDate);
-
-  const startEdit = () => setIsEditing(true);
-  const cancelEdit = () => {
-    setDesc(description);
-    setDue(dueDate);
-    setIsEditing(false);
-  };
-
-  const saveEdit = () => {
-    const trimmed = desc.trim();
-    if (!trimmed) return;
-    if (trimmed !== description || due !== dueDate) {
-      dispatch({
-        type: TASK_UPDATE,
-        payload: {
-          taskId: task.taskId,
-          description: trimmed,
-          dueDate: due || undefined,
-        },
-      });
-    }
-    setIsEditing(false);
-  };
-
-  const handleDelete = () => {
-    dispatch({ type: TASK_DELETE, payload: task.taskId });
-  };
-
-  const handleNextState = () => {
-    const next = getNextState(task.state);
-    dispatch({
-      type: TASK_STATE_SET,
-      payload: { taskId: task.taskId, state: next },
-    });
-  };
-
+export default function TaskCard({
+  description,
+  dueDate,
+  state,
+  isEditing,
+  desc,
+  due,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onDelete,
+  onDescChange,
+  onDueChange,
+  onNextState,
+  nextStateLabel,
+  upcomingState,
+}) {
   return (
     <Card>
-      <Header>
+      <Header
+        as={isEditing ? 'form' : 'div'}
+        onSubmit={(e) => e.preventDefault()}
+      >
         {isEditing ? (
           <Inputs>
             <DescInput
               autoFocus
               value={desc}
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => onDescChange(e.target.value)}
               aria-label="Task description"
             />
             <DateInput
               type="date"
               value={due}
-              onChange={(e) => setDue(e.target.value)}
+              onChange={(e) => onDueChange(e.target.value)}
               aria-label="Due date"
             />
           </Inputs>
@@ -92,7 +46,7 @@ export default function TaskCard({ task }) {
               <Description title={description}>{description}</Description>
               {dueDate ? <Due>Due: {dueDate}</Due> : null}
             </Content>
-            <Badge data-state={task.state}>{task.state}</Badge>
+            <Badge $state={state}>{state}</Badge>
           </>
         )}
       </Header>
@@ -101,29 +55,29 @@ export default function TaskCard({ task }) {
         {isEditing ? (
           <>
             <Button
-              onClick={saveEdit}
+              onClick={onSaveEdit}
               disabled={!desc.trim()}
               aria-label="Save changes"
             >
               Save
             </Button>
-            <Button onClick={cancelEdit} aria-label="Cancel changes">
+            <Button onClick={onCancelEdit} aria-label="Cancel changes">
               Cancel
             </Button>
           </>
         ) : (
           <>
-            <Button onClick={startEdit} aria-label="Edit card">
+            <Button onClick={onStartEdit} aria-label="Edit card">
               Edit
             </Button>
-            <Button onClick={handleDelete} aria-label="Delete card">
+            <Button onClick={onDelete} aria-label="Delete card">
               Delete
             </Button>
             <Button
-              onClick={handleNextState}
-              aria-label={`Set status to ${getNextState(task.state)}`}
+              onClick={onNextState}
+              aria-label={`Set status to ${upcomingState}`}
             >
-              {nextStateLabel(task.state)}
+              {nextStateLabel}
             </Button>
           </>
         )}
@@ -168,25 +122,20 @@ const Badge = styled.span`
   font-weight: 600;
   text-transform: uppercase;
   white-space: nowrap;
-  border: 1px solid
-    ${({ theme, ['data-state']: s }) =>
-      s === 'DONE'
-        ? theme.status.done.bd
-        : s === 'IN PROGRESS'
-          ? theme.status.inProgress.bd
-          : theme.status.todo.bd};
-  background: ${({ theme, ['data-state']: s }) =>
-    s === 'DONE'
-      ? theme.status.done.bg
-      : s === 'IN PROGRESS'
-        ? theme.status.inProgress.bg
-        : theme.status.todo.bg};
-  color: ${({ theme, ['data-state']: s }) =>
-    s === 'DONE'
-      ? theme.status.done.fg
-      : s === 'IN PROGRESS'
-        ? theme.status.inProgress.fg
-        : theme.status.todo.fg};
+
+  ${({ theme, $state }) => {
+    const map = {
+      DONE: theme.status.done,
+      'IN PROGRESS': theme.status.inProgress,
+      TODO: theme.status.todo,
+    };
+    const s = map[$state] ?? theme.status.todo;
+    return css`
+      border: 1px solid ${s.bd};
+      background: ${s.bg};
+      color: ${s.fg};
+    `;
+  }}
 `;
 
 const Content = styled.div`
