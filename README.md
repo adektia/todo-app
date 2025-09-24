@@ -56,10 +56,11 @@ The production build will be in the `build/` directory.
 ## Project Structure
 
 - `src/` — Main source code
-  - `components/` — Reusable UI components (TaskCard, Button, Toolbar, etc.)
+  - `components/` — Reusable stateless UI components (TaskForm, Button, Toolbar, etc.)
   - `containers/` — Stateful containers for app sections
   - `state/` — Context, reducer, and actions for global state management
   - `styles/` — Global styles, theme, and design tokens
+  - `__tests__/` — Unit tests (Jest)
 - `public/` — Static files and HTML template
 
 ## Design Principles
