@@ -1,11 +1,11 @@
 import React from 'react';
 import { reducer, initialState } from './reducer';
 
-const STORAGE_KEY = 'todoapp.v1';
+export const STORAGE_KEY = 'todoapp.v1';
 
 export const AppContext = React.createContext();
 
-function readLocal() {
+export function readLocal() {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -27,7 +27,7 @@ function readLocal() {
   }
 }
 
-function writeLocal(state) {
+export function writeLocal(state) {
   if (typeof window === 'undefined') return;
   const toPersist = {
     tasks: state.tasks,

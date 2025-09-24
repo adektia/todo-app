@@ -77,6 +77,36 @@ The production build will be in the `build/` directory.
 - Test UI changes on multiple device sizes for responsiveness.
 - Commit changes with clear messages and follow code style (Prettier, ESLint).
 
+## Testing
+
+This project uses Jest for unit testing. Test files are located in the `src/__tests__/` directory and cover reducers and other logic.
+
+### Running Tests
+
+- To run all tests once:
+
+  ```sh
+  npm run test
+  ```
+
+- To run individual test file:
+
+  ```sh
+  npm run test -- src/__tests__/{testName}.test.js
+  ```
+
+- To run a specific test inside a file, use:
+
+  ```sh
+  npm run test -- -t "handles TASK_UPDATE"
+  ```
+
+### Writing Tests
+
+- Use Jest's `describe`, `it`, and `expect` for test cases.
+- Mock time or other globals as needed (see reducer tests for examples).
+- Place new test files in `src/__tests__/` and name them with `.test.js`.
+
 ## Troubleshooting
 
 - If you encounter issues, check your Node.js and npm versions.
