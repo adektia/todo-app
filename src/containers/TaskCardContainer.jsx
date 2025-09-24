@@ -66,16 +66,6 @@ export default function TaskCardContainer({ task }) {
     });
   };
 
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      onSaveEdit();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      onCancelEdit();
-    }
-  };
-
   return (
     <TaskCard
       description={originalDesc}
@@ -93,7 +83,6 @@ export default function TaskCardContainer({ task }) {
       onNextState={onNextState}
       nextStateLabel={nextStateLabel}
       upcomingState={upcomingState}
-      onKeyDown={onKeyDown}
     />
   );
 }
