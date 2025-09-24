@@ -1,6 +1,6 @@
 # Todo App
 
-Welcome to the Todo App! This project is a modern, responsive React application for managing tasks. This guide will help you get started as a developer and understand the design principles used in the app.
+Welcome to the Todo App! This project is a responsive React application for managing tasks. This guide will help to get started and understand the design principles used in the app.
 
 ## Getting Started
 
