@@ -1,7 +1,8 @@
 import React from 'react';
-import TaskCard from '../components/Task/TaskCard';
 import { AppContext } from '../state/context';
 import { TASK_DELETE, TASK_UPDATE, TASK_STATE_SET } from '../state/actions';
+import TaskCardView from '../components/Task/TaskCardView';
+import TaskCardEditor from '../components/Task/TaskCardEditor';
 
 const STATES = ['TODO', 'IN PROGRESS', 'DONE'];
 const LABEL = { TODO: 'Start', 'IN PROGRESS': 'Complete', DONE: 'Reset' };
@@ -66,20 +67,22 @@ export default function TaskCardContainer({ task }) {
     });
   };
 
-  return (
-    <TaskCard
+  return isEditing ? (
+    <TaskCardEditor
+      desc={desc}
+      due={due}
+      onDescChange={setDesc}
+      onDueChange={setDue}
+      onSaveEdit={onSaveEdit}
+      onCancelEdit={onCancelEdit}
+    />
+  ) : (
+    <TaskCardView
       description={originalDesc}
       dueDate={originalDue}
       state={task.state}
-      isEditing={isEditing}
-      desc={desc}
-      due={due}
       onStartEdit={onStartEdit}
-      onCancelEdit={onCancelEdit}
-      onSaveEdit={onSaveEdit}
       onDelete={onDelete}
-      onDescChange={setDesc}
-      onDueChange={setDue}
       onNextState={onNextState}
       nextStateLabel={nextStateLabel}
       upcomingState={upcomingState}
