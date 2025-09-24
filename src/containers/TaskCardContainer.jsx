@@ -1,4 +1,3 @@
-// containers/TaskCardContainer.jsx
 import React from 'react';
 import TaskCard from '../components/Task/TaskCard';
 import { AppContext } from '../state/context';
@@ -29,10 +28,7 @@ export default function TaskCardContainer({ task }) {
   }, [originalDesc, originalDue, isEditing]);
 
   const upcomingState = React.useMemo(() => getNext(task.state), [task.state]);
-  const nextStateLabel = React.useMemo(
-    () => LABEL[task.state] ?? 'Next',
-    [task.state]
-  );
+  const nextStateLabel = React.useMemo(() => LABEL[task.state], [task.state]);
 
   const onStartEdit = () => setIsEditing(true);
   const onCancelEdit = () => {
